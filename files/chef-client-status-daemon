@@ -1,0 +1,11 @@
+#!/bin/bash
+pexit(){
+  echo ${1}
+  exit
+}
+state=$(cat /var/run/chef-client.state 2>/dev/null)
+[[ -z ${state} ]] && pexit 'stopped'
+curr_pid=$(ps -ef | grep /usr/bin/chef-client | grep -v grep | awk '{print $2}')
+[[ -z ${curr_pid} ]] && [[ ${state} = 'started' ]] && pexit 'unknown'
+[[ -n ${curr_pid} ]] && [[ ${state} = 'stopped' ]] && pexit 'unknown'
+pexit $state

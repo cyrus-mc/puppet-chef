@@ -1,0 +1,12 @@
+#!/bin/bash
+pexit(){
+  echo 'stopped' > /var/run/chef-client.state
+  rm -rf /var/run/chef-client.pid 2>/dev/null
+  exit
+}
+[[ ! -f /var/run/chef-client.pid ]] && pexit
+[[ ! -f /var/run/chef-client.state ]] && pexit
+curr_pid=$(ps -ef | grep /usr/bin/chef-client | grep -v grep | awk '{print $2}')
+[[ -z ${curr_pid} ]] && pexit
+kill ${curr_pid}
+pexit

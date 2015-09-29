@@ -1,0 +1,3 @@
+#!/bin/bash
+chef-client --logfile /var/log/chef-client.log -d -s 1800 --pid /var/run/chef-client.pid
+echo 'started' > /var/run/chef-client.state
